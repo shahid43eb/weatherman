@@ -8,7 +8,6 @@ Completed Guide to setup project from scratch.
     * [PIP](#pip)
 * [Project Setup](#project-setup)
     * [Install, Create and Activate Virtual Environment](#install-create-and-activate-virtual-environment)
-    * [Install Required Packages](#install-required-packages)
 * [Project Execution](#project-execution)
 ## Environment Setup
 > For this project, we need to install following technologies and tools:
@@ -41,13 +40,6 @@ Create new python virtual environment with default python version set to 3.7
 ```
 $ virtualenv --python=`which python3.7` ./venv
 $ source venv/bin/activate
-```
-### Install Required Packages
-```
-$ sudo apt install build-essential
-$ sudo apt-get install libmysqlclient-dev
-$ apt-get install libxml2-dev libxslt1-dev python-dev
-$ apt-get install libssl-dev libffi-dev
 ```
 ### Installing dependencies
 ```

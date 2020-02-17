@@ -6,28 +6,18 @@ class LowValCalc(FileReader):
         super().__init__(dir_path, duration)
 
     def get_lowest_temp(self):
-        mapped_list = self.get_mapped_data_list()
-        if len(mapped_list) > 0:
-            return min([
-                min(list(filter(lambda x: x['Min TemperatureC'], row)), key=lambda y: int(y['Min TemperatureC']))
-                for row in mapped_list], key=lambda y: int(y['Min TemperatureC']))
-        else:
-            return None
+        return self.__get_lowest_value("Min TemperatureC")
 
     def get_lowest_humidity(self):
-        mapped_list = self.get_mapped_data_list()
-        if len(mapped_list) > 0:
-            return min([
-                min(list(filter(lambda x: x['Min Humidity'], row)), key=lambda y: int(y['Min Humidity']))
-                for row in mapped_list], key=lambda y: int(y['Min Humidity']))
-        else:
-            return None
+        return self.__get_lowest_value("Min Humidity")
 
     def get_avg_low_temp(self):
-        mapped_list = self.get_mapped_data_list()
-        if len(mapped_list) > 0:
+        return self.__get_lowest_value("Mean TemperatureC")
+
+    def __get_lowest_value(self, key_identifier):
+        if len(self.mapped_data_list) > 0:
             return min([
-                min(list(filter(lambda x: x['Mean TemperatureC'], row)), key=lambda y: int(y['Mean TemperatureC']))
-                for row in mapped_list], key=lambda y: int(y['Mean TemperatureC']))
+                min(list(filter(lambda x: x.get(key_identifier), row)), key=lambda y: int(y.get(key_identifier)))
+                for row in self.mapped_data_list], key=lambda y: int(y.get(key_identifier)))
         else:
             return None

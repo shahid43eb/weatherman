@@ -9,18 +9,15 @@ class AvgValCalc(FileReader):
         super().__init__(dir_path, duration)
 
     def get_avg_mean_humidity(self):
-        mapped_list = self.get_mapped_data_list()
-        if len(mapped_list) > 0:
-            return floor(mean([mean(int(x['Mean Humidity']) for x in list(filter(lambda x: x['Mean Humidity'], row)))
-                               for row in mapped_list]))
-        else:
-            return None
+        return self.__get_avg_value("Mean Humidity")
 
     def get_avg_mean_temp(self):
-        mapped_list = self.get_mapped_data_list()
-        if len(mapped_list) > 0:
+        return self.__get_avg_value("Mean TemperatureC")
+
+    def __get_avg_value(self, key_identifier):
+        if len(self.mapped_data_list) > 0:
             return floor(
-                mean([mean(int(x['Mean TemperatureC']) for x in list(filter(lambda x: x['Mean TemperatureC'], row)))
-                      for row in mapped_list]))
+                mean([mean(int(x.get(key_identifier)) for x in list(filter(lambda x: x.get(key_identifier), row)))
+                      for row in self.mapped_data_list]))
         else:
             return None
