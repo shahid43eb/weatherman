@@ -12,36 +12,35 @@ class ReportGenerator(HighValCalc, LowValCalc, AvgValCalc):
     def high_value_report(self):
         max_temp = self.get_highest_temp()
         min_temp = self.get_lowest_temp()
-        print(f"{BColors.BOLD}"
-              f"{FormattedDate(self.duration).get_year_month_s() if len(self.duration.split('/')) > 1 else self.duration}"
-              f"{BColors.ENDC}")
-        print(f'Highest: {BColors.FAIL}{max_temp["Max TemperatureC"]}C{BColors.ENDC} '
-              f'on {FormattedDate(max_temp["PKT"]).get_month_day()}')
-        print(f'Lowest: {BColors.OKBLUE}{min_temp["Min TemperatureC"]}C{BColors.ENDC} '
-              f'on {FormattedDate(min_temp["PKT"]).get_month_day()}')
-        print(f'Humidity: {BColors.OKGREEN}{min_temp["Max Humidity"]}%{BColors.ENDC}\n')
+        humidity = self.get_highest_humidity()
+        high_formatted_date = FormattedDate(max_temp.get("PKT") or max_temp.get("PKST")).get_month_day()
+        low_formatted_date = FormattedDate(min_temp.get("PKT") or min_temp.get("PKST")).get_month_day()
+        print(f'Highest: {BColors.FAIL}{max_temp.get("Max TemperatureC")}C{BColors.ENDC} on {high_formatted_date}')
+        print(f'Lowest: {BColors.OKBLUE}{min_temp.get("Min TemperatureC")}C{BColors.ENDC} on {low_formatted_date}')
+        print(f'Humidity: {BColors.OKGREEN}{humidity.get("Max Humidity")}%{BColors.ENDC}\n')
 
     def avg_value_report(self):
         avg_max_temp = self.get_avg_high_temp()
         avg_min_temp = self.get_avg_low_temp()
         avg_mean_humidity = self.get_avg_mean_humidity()
-        print(f"{BColors.BOLD}"
-              f"{FormattedDate(self.duration).get_year_month_s() if len(self.duration.split('/')) > 1 else self.duration}"
-              f"{BColors.ENDC}")
-        print(f'Highest Average: {BColors.FAIL}{avg_max_temp["Mean TemperatureC"]}C{BColors.ENDC}')
-        print(f'Lowest Average: {BColors.OKBLUE}{avg_min_temp["Min TemperatureC"]}C{BColors.ENDC}')
+        formatted_date = FormattedDate(self.duration).get_year_month_s() if len(
+            self.duration.split('/')) > 1 else self.duration
+        print(f"{BColors.BOLD}{formatted_date}{BColors.ENDC}")
+        print(f'Highest Average: {BColors.FAIL}{avg_max_temp.get("Mean TemperatureC")}C{BColors.ENDC}')
+        print(f'Lowest Average: {BColors.OKBLUE}{avg_min_temp.get("Min TemperatureC")}C{BColors.ENDC}')
         print(f'Average Mean Humidity: {BColors.OKGREEN}{avg_mean_humidity}{BColors.ENDC}%\n')
 
     def chart_report(self):
-        mapped_list = self.get_mapped_data_list()
-        for month_list in mapped_list:
+        for month_list in self.mapped_data_list:
             for idx, day_obj in enumerate(month_list):
+                min_temp_c = abs(int(day_obj.get('Min TemperatureC')))
                 if idx == 0:
-                    print(f"{BColors.BOLD}{FormattedDate(day_obj['PKT']).get_year_month_s()}{BColors.ENDC}")
+                    formatted_date = FormattedDate(day_obj.get('PKT') or day_obj.get('PKST')).get_year_month_s()
+                    print(f"{BColors.BOLD}{formatted_date}{BColors.ENDC}")
                 print(
-                    f"{FormattedDate(day_obj['PKT']).get_day()} {BColors.OKBLUE}"
-                    f"{abs(int(day_obj['Min TemperatureC'])) * ('-' if int(day_obj['Min TemperatureC']) < 0 else '+')}"
-                    f"{BColors.FAIL}{'+' * int(day_obj['Max TemperatureC'])}{BColors.ENDC} "
-                    f"{BColors.OKBLUE}{day_obj['Min TemperatureC']}C{BColors.ENDC} "
-                    f"{BColors.FAIL}{day_obj['Max TemperatureC']}C{BColors.ENDC}"
+                    f"{FormattedDate(day_obj.get('PKT') or day_obj.get('PKST')).get_day()} {BColors.OKBLUE}"
+                    f"{min_temp_c * ('-' if int(day_obj.get('Min TemperatureC')) < 0 else '+')}"
+                    f"{BColors.FAIL}{'+' * int(day_obj.get('Max TemperatureC'))}{BColors.ENDC} "
+                    f"{BColors.OKBLUE}{day_obj.get('Min TemperatureC')}C{BColors.ENDC} "
+                    f"{BColors.FAIL}{day_obj.get('Max TemperatureC')}C{BColors.ENDC}"
                 )
