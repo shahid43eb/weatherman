@@ -18,6 +18,7 @@ class FileHandler:
     def __format_txt_file_data(self):
         f = open(self.file, 'r')
         file_data = f.read()
+        f.close()
         rows = list(filter(None, file_data.split('\n')))
         header = rows.pop(0).split(',')
         header = list(map(str.strip, header))
@@ -26,6 +27,7 @@ class FileHandler:
     def __format_tsv_file_data(self):
         f = open(self.file, 'r')
         file_data = f.read()
+        f.close()
         rows = list(filter(None, file_data.split('\n')))
         header = rows.pop(0).split('\t')
         header = list(map(str.strip, header))
